@@ -1,0 +1,32 @@
+CREATE OR REPLACE
+procedure pro_select
+(r_sq in number)
+IS
+CURSOR cur_select is
+select GP_WORKORDERS.WORKORDER,GP_WORKORDERS.ORDERDESCRIPTION,GP_ROOMINVENTORY.ROOMTYPE,GP_ROOMINVENTORY.ROOMDESCRIPTION from GP_WORKORDERS inner join GP_ROOMINVENTORY using (ROOM_ID) where GP_ROOMINVENTORY.SQUAREFEET = r_sq;
+TYPE type_select is RECORD(
+workorder GP_WORKORDERS.WORKORDER%type,
+orderdescription GP_WORKORDERS.ORDERDESCRIPTION%type,
+roomtype GP_ROOMINVENTORY.ROOMTYPE%type,
+roomdescription GP_ROOMINVENTORY.ROOMDESCRIPTION%type);
+rec_select type_select;
+begin
+open cur_select;
+loop 
+fetch cur_select into rec_select;
+EXIT when cur_select%NOTFOUND;
+DBMS_OUTPUT.PUT_LINE(rec_select.workorder|| ' '||rec_select.ORDERDESCRIPTION||''||rec_select.ROOMTYPE||''||rec_select.ROOMDESCRIPTION);
+end loop;
+close cur_select;
+end;
+
+
+
+
+---------------------------------------------------------------------------------------
+
+declare
+V_sq GP_ROOMINVENTORY.SQUAREFEET % TYPE := 600;
+begin
+pro_select(v_sq);
+end;

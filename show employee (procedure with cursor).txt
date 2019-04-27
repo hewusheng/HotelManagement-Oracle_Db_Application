@@ -1,0 +1,22 @@
+CREATE OR REPLACE
+procedure EMP_SP_showEmployee
+ 
+as
+cursor C_employee is select * from GP_EMPLOYEE;
+       r_employee C_employee%ROWTYPE;
+    begin
+        open C_employee;
+        loop
+          fetch C_employee into r_employee;
+          exit when c_employee%NOTFOUND;
+          DBMS_OUTPUT.put_line(r_employee.firstName|| ' '||r_employee.LASTNAME);
+	       end loop;
+       close c_employee;
+   end;
+
+
+
+
+begin
+emp_sp_showemployee();
+end;

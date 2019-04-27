@@ -1,0 +1,58 @@
+--先运行这个
+
+CREATE OR REPLACE
+PROCEDURE find_request_sp
+(p_reid in number, p_rqds out VARCHAR2)
+
+IS
+
+BEGIN
+	
+SELECT REQUESTDESCRIPTION 
+	
+INTO p_rqds
+	
+FROM GP_SPECIALREQUESTS
+	
+WHERE RESERVATION_ID = p_reid;
+
+END;
+
+--下面这个procedure调用上面的
+CREATE OR REPLACE
+PROCEDURE find_guestnum_sp
+(p_roid in GP_RESERVATION.ROOM_ID%TYPE, 
+ p_numg out number,
+ p_jrqds out VARCHAR2)
+IS
+BEGIN
+	SELECT GP_RESERVATION.NUMBERGUEST
+	INTO p_numg
+	FROM GP_RESERVATION
+	WHERE RESERVATION_ID = p_roid;
+	find_request_sp(p_roid, p_jrqds);
+EXCEPTION
+	WHEN NO_DATA_FOUND THEN
+	 DBMS_OUTPUT.PUT_LINE('No such room');
+END;
+
+--用代码测试procedure
+DECLARE
+	
+lv_roomid GP_RESERVATION.ROOM_ID%TYPE := 3;
+	
+lv_guest_num NUMBER(10);
+	
+lv_request_des VARCHAR2(50);
+
+BEGIN
+	
+DBMS_OUTPUT.PUT_LINE('Let''s begin');
+	
+find_guestnum_sp(lv_roomid, lv_guest_num, lv_request_des);
+	
+DBMS_OUTPUT.PUT_LINE(lv_guest_num);
+	
+DBMS_OUTPUT.PUT_LINE(lv_request_des);
+
+END;

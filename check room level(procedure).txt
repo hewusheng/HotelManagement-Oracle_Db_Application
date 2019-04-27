@@ -1,0 +1,25 @@
+CREATE OR REPLACE
+procedure check_room_level
+(r_cap in number)
+as
+lv_id GP_ROOMINVENTORY.room_id%type;
+lv_squ GP_ROOMINVENTORY.SQUAREFEET%type;
+begin
+
+
+select room_id,squarefeet  into lv_id,lv_squ  from GP_ROOMINVENTORY where ROOM_ID = r_cap;
+DBMS_OUTPUT.PUT_LINE(lv_id||'        '||lv_squ);
+if lv_squ>500 then
+DBMS_OUTPUT.PUT_LINE('THIS is a hugn room');
+elsif lv_squ>400 then 
+DBMS_OUTPUT.PUT_LINE('THIS is a medium room');
+else
+DBMS_OUTPUT.PUT_LINE('THIS is a small room');
+end if;
+end check_room_level;
+
+------------------------------------
+
+begin
+check_room_level(10);
+end;
